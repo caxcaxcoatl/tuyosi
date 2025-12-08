@@ -1,0 +1,14 @@
+[package]
+name = "tuyosi"
+version = "0.0.1"
+edition = "2024"
+
+[lib]
+name = "tuyosi"
+path = "src/matrix.rs"
+
+[[bin]]
+name = "tuyosi"
+path = "src/main.rs"
+
+[dependencies]
