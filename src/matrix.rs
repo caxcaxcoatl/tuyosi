@@ -12,26 +12,26 @@ pub struct GameMatrix {
 // - current (revealed + user)
 //
 // All below return bottom left cell
-// - get_pos_line (1, 1)
+// - get_index_from_line_pos (1, 1)
 // - get_pos_col (1,1) 
 // - get_index_from_square_pos (1,1)
 //
 // All below return top right cell:
 //
-// - get_pos_line (9,9)
+// - get_index_from_line_pos (9,9)
 // - get_pos_col (9,9)
 // - get_index_from_square_pos (9,9)
 //
 // Top left:
 //
-// - get_pos_line (9,1)
+// - get_index_from_line_pos (9,1)
 // - get_pos_col (1,9)
 // - get_index_from_square_pos (7,7)
 //
 // Opposite functions:
 //
-// get_cell_line (0) -> 1, 1 (first cell in first line)
-// get_cell_line (11) -> 2, 2 
+// get_line_pos_from_index (0) -> 1, 1 (first cell in first line)
+// get_line_pos_from_index (11) -> 2, 2 
 // get_square_line (11) -> 4, 2
 //
 // Use the opposite functions to test all cells for all three get_pos
@@ -143,13 +143,24 @@ impl GameMatrix{
     /// Returns the position in the array of the given item on the given line
     /// Line numbers start at 1, at the bottom.  So, the top line is #9
     /// Item numbers are left to right, also starting in 1
-    pub fn get_pos_line (line: u8, item: u8) -> usize {
+    /// ```
+    /// use tuyosi::GameMatrix;
+    /// assert_eq! (GameMatrix::get_index_from_line_pos (1, 1), 0);
+    /// assert_eq! (GameMatrix::get_index_from_line_pos (2, 1), 9);
+    /// assert_eq! (GameMatrix::get_index_from_line_pos (9, 9), 80);
+    /// ```
+    pub fn get_index_from_line_pos (line: u8, item: u8) -> usize {
         ((line-1) * 9 + item - 1) as usize
     }
 
-    /// This is the opposite of get_pos_line: given an array position (starting at 0),
+    /// This is the opposite of get_index_from_line_pos: given an array position (starting at 0),
     /// return its line and item
-    pub fn get_cell_line (cell: usize) -> (u8, u8) {
+    /// ```
+    /// use tuyosi::GameMatrix;
+    /// assert_eq! (GameMatrix:: get_line_pos_from_index (0), (1,1));
+    /// assert_eq! (GameMatrix:: get_line_pos_from_index (80), (9,9));
+    /// ```
+    pub fn get_line_pos_from_index (cell: usize) -> (u8, u8) {
         let (div, module) = ( ( cell / 9) as u8, (cell % 9) as u8);
         (div+1, module+1)
     }
@@ -177,17 +188,10 @@ mod test {
     use super::*;
 
 #[test]
-    fn test_get_pos_line () {
-        assert_eq! (GameMatrix::get_pos_line (1, 1), 0);
-        assert_eq! (GameMatrix::get_pos_line (2, 1), 9);
-        assert_eq! (GameMatrix::get_pos_line (9, 9), 80);
-
-        assert_eq! (GameMatrix:: get_cell_line (0), (1,1));
-        assert_eq! (GameMatrix:: get_cell_line (80), (9,9));
-
+    fn test_get_index_from_line_pos () {
         for line in 1..10 {
             for item in 1..10 {
-                assert_eq! (GameMatrix::get_cell_line(GameMatrix::get_pos_line(line, item)), (line, item))
+                assert_eq! (GameMatrix::get_line_pos_from_index(GameMatrix::get_index_from_line_pos(line, item)), (line, item))
             }
         }
     }
