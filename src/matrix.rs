@@ -13,19 +13,19 @@ pub struct GameMatrix {
 //
 // All below return bottom left cell
 // - get_index_from_line_pos (1, 1)
-// - get_pos_col (1,1) 
+// - get_index_from_col_pos (1,1) 
 // - get_index_from_square_pos (1,1)
 //
 // All below return top right cell:
 //
 // - get_index_from_line_pos (9,9)
-// - get_pos_col (9,9)
+// - get_index_from_col_pos (9,9)
 // - get_index_from_square_pos (9,9)
 //
 // Top left:
 //
 // - get_index_from_line_pos (9,1)
-// - get_pos_col (1,9)
+// - get_index_from_col_pos (1,9)
 // - get_index_from_square_pos (7,7)
 //
 // Opposite functions:
@@ -170,13 +170,25 @@ impl GameMatrix{
     /// 1,1 -> bottom left
     /// 1,9 -> top left
     /// 9,9 -> top right
-    pub fn get_pos_col (col: u8, item: u8) -> usize {
+    /// ```
+    /// use tuyosi::GameMatrix;
+    /// assert_eq! (GameMatrix::get_index_from_col_pos(1,1), 0);
+    /// assert_eq! (GameMatrix::get_index_from_col_pos(2,1), 1);
+    /// assert_eq! (GameMatrix::get_index_from_col_pos(9,9), 80);
+    /// ```
+    pub fn get_index_from_col_pos (col: u8, item: u8) -> usize {
         ( (item-1) *9 + (col-1) ) as usize
     }
 
-    /// This is the opposite of get_pos_col: given an array position (starting at )),
+    /// This is the opposite of get_index_from_col_pos: given an array position (starting at )),
     /// return the column and item
-    pub fn get_cell_col (cell:  usize) -> (u8, u8) {
+    /// ```
+    /// use tuyosi::GameMatrix;
+    /// assert_eq! (GameMatrix::get_col_pos_from_index(0), (1,1));
+    /// assert_eq! (GameMatrix::get_col_pos_from_index(80), (9,9));
+    /// assert_eq! (GameMatrix::get_col_pos_from_index(1), (2,1));
+    /// ```
+    pub fn get_col_pos_from_index (cell:  usize) -> (u8, u8) {
         let (div, module) = ( ( cell / 9) as u8, (cell % 9) as u8);
         ( module+1, div+1)
     }
@@ -197,17 +209,10 @@ mod test {
     }
 
 #[test]
-    fn test_get_pos_col () {
-        assert_eq! (GameMatrix::get_pos_col(1,1), 0);
-        assert_eq! (GameMatrix::get_pos_col(2,1), 1);
-        assert_eq! (GameMatrix::get_pos_col(9,9), 80);
-
-        assert_eq! (GameMatrix::get_cell_col(0), (1,1));
-        assert_eq! (GameMatrix::get_cell_col(80), (9,9));
-        assert_eq! (GameMatrix::get_cell_col(1), (2,1));
+    fn test_get_index_from_col_pos () {
         for line in 1..10 {
             for item in 1..10 {
-                assert_eq! (GameMatrix::get_cell_col(GameMatrix::get_pos_col(line, item)), (line, item))
+                assert_eq! (GameMatrix::get_col_pos_from_index(GameMatrix::get_index_from_col_pos(line, item)), (line, item))
             }
         }
     }
