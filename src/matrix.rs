@@ -40,7 +40,7 @@ pub struct GameMatrix {
 impl GameMatrix{
     
     /// Returns the index in the array of the given position in the given square.
-    /// Both parameter utilize a standard keyboard numpad for location.  That is:
+    /// Both parameters utilize a standard keyboard numpad for location.  That is:
     ///
     /// - 1 is bottom left
     /// - 5 is the center item
@@ -52,6 +52,7 @@ impl GameMatrix{
     /// assert_eq! (GameMatrix::get_index_from_square_pos(1,1), 0);
     /// assert_eq! (GameMatrix::get_index_from_square_pos(9,9), 80);
     /// assert_eq! (GameMatrix::get_index_from_square_pos(4,1), 27);
+    /// assert_eq! (GameMatrix::get_index_from_square_pos(2,1), 3);
     /// ```
     pub fn get_index_from_square_pos (square: u8, pos: u8) -> usize {
         let (square_col_shift, square_line_shift)   = GameMatrix::get_square_shift (square);
@@ -209,12 +210,8 @@ mod test {
 
 #[test]
     fn test_get_index_from_square_pos () {
-        assert_eq! (GameMatrix::get_index_from_square_pos(1,1), 0);
-        assert_eq! (GameMatrix::get_index_from_square_pos(2,1), 3);
-        assert_eq! (GameMatrix::get_index_from_square_pos(9,9), 80);
-
-        for line in (1..10) {
-            for item in (1..10) {
+        for line in 1..10 {
+            for item in 1..10 {
                 assert_eq! (GameMatrix::get_square_pos_from_index(GameMatrix::get_index_from_square_pos(line, item)), (line, item))
             }
         }
