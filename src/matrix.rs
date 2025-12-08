@@ -200,7 +200,9 @@ mod test {
     use super::*;
 
 #[test]
-    fn test_get_index_from_line_pos () {
+    /// The doc tests check individual items; here we use the opposite functions to ensure
+    /// all items are covered
+    fn test_get_index_from_line_pos_opposites () {
         for line in 1..10 {
             for item in 1..10 {
                 assert_eq! (GameMatrix::get_line_pos_from_index(GameMatrix::get_index_from_line_pos(line, item)), (line, item))
@@ -209,7 +211,9 @@ mod test {
     }
 
 #[test]
-    fn test_get_index_from_col_pos () {
+    /// The doc tests check individual items; here we use the opposite functions to ensure
+    /// all items are covered
+    fn test_get_index_from_col_pos_opposites () {
         for line in 1..10 {
             for item in 1..10 {
                 assert_eq! (GameMatrix::get_col_pos_from_index(GameMatrix::get_index_from_col_pos(line, item)), (line, item))
@@ -218,7 +222,9 @@ mod test {
     }
 
 #[test]
-    fn test_get_index_from_square_pos () {
+    /// The doc tests check individual items; here we use the opposite functions to ensure
+    /// all items are covered
+    fn test_get_index_from_square_pos_opposites () {
         for line in 1..10 {
             for item in 1..10 {
                 assert_eq! (GameMatrix::get_square_pos_from_index(GameMatrix::get_index_from_square_pos(line, item)), (line, item))
