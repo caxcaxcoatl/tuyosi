@@ -1,6 +1,6 @@
 
 pub struct GameMatrix {
-    // solution : [u8; 81]
+    matrix : [u8; 81]
 }
 
 // Struct Game
@@ -38,6 +38,21 @@ pub struct GameMatrix {
 // Also test extremes, select and incorrect options (such as any zero entries)
 
 impl GameMatrix{
+
+    pub fn zeroes() -> GameMatrix {
+        GameMatrix { matrix: [0; 81] }
+    }
+
+    pub fn as_string (&self) -> String {
+        let mut res = String::with_capacity(81+9);
+        for i in (0..9).rev() {
+            for j in 0..9 {
+                res.push_str(&self.matrix[i*9+j].to_string())
+            }
+            res.push_str("\n");
+        }
+        res
+    }
     
     /// Returns the index in the array of the given position in the given square.
     /// Both parameters utilize a standard keyboard numpad for location.  That is:
@@ -118,6 +133,30 @@ impl GameMatrix{
         dbg! (square, square_line * 3 + 1 + square_col)
     }
 
+    /// Gets the value in the given position at the given square
+    ///
+    /// ```
+    /// use tuyosi::GameMatrix;
+    /// let m = GameMatrix::zeroes();
+    /// assert_eq! (m.get_square_pos(1,1), 0);
+    /// ```
+    pub fn get_square_pos (&self, square: u8, pos: u8) -> u8 {
+        self.matrix[GameMatrix::get_index_from_square_pos (square, pos)]
+    }
+
+    /// Sets the value on the given position at the given square
+    ///
+    /// ```
+    /// use tuyosi::GameMatrix;
+    /// let mut m = GameMatrix::zeroes();
+    /// assert_eq! (m.get_square_pos(1,1), 0);
+    /// m.set_square_pos(1,1,9);
+    /// assert_eq! (m.get_square_pos(1,1), 9);
+    /// ```
+    pub fn set_square_pos (&mut self, square: u8, pos: u8, value: u8) {
+        self.matrix[GameMatrix::get_index_from_square_pos (square, pos)] = value;
+    }
+
     /// Given a square position, returns the colum and line shifts to be applied
     /// on a matrix to place it.
     ///
@@ -165,7 +204,7 @@ impl GameMatrix{
         (div+1, module+1)
     }
 
-    /// Returns the position in the array of the tiven item on the given column.
+    /// Returns the position in the array of the given item on the given column.
     /// Column numbers start at 1 and go left to right.
     /// 1,1 -> bottom left
     /// 1,9 -> top left
@@ -230,6 +269,18 @@ mod test {
                 assert_eq! (GameMatrix::get_square_pos_from_index(GameMatrix::get_index_from_square_pos(line, item)), (line, item))
             }
         }
+    }
+
+#[test]
+    fn test_as_string () {
+        let mut m = GameMatrix { matrix: [ 0; 81 ] };
+        assert_eq! ( m.as_string(), "000000000\n000000000\n000000000\n000000000\n000000000\n000000000\n000000000\n000000000\n000000000\n" );
+        m.set_square_pos(5,5,5);
+        assert_eq! ( m.as_string(), "000000000\n000000000\n000000000\n000000000\n000050000\n000000000\n000000000\n000000000\n000000000\n" );
+        m.set_square_pos(1,1,1);
+        assert_eq! ( m.as_string(), "000000000\n000000000\n000000000\n000000000\n000050000\n000000000\n000000000\n000000000\n100000000\n" );
+        m.set_square_pos(9,9,9);
+        assert_eq! ( m.as_string(), "000000009\n000000000\n000000000\n000000000\n000050000\n000000000\n000000000\n000000000\n100000000\n" );
     }
 
 }
